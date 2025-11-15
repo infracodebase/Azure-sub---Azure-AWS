@@ -1,0 +1,35 @@
+# Example Terraform variables file
+# Copy this to terraform.tfvars and customize values
+
+# Environment configuration
+environment  = "dev"
+location     = "East US 2"
+project_name = "secure-infra"
+
+# Network security - Add your public IP addresses for emergency access
+allowed_ip_addresses = [
+  # "203.0.113.1/32",  # Your office IP
+  # "198.51.100.1/32", # Your home IP
+]
+
+# PostgreSQL configuration
+postgresql_admin_username = "psqladmin"
+postgresql_sku_name       = "GP_Standard_D2s_v3"  # General Purpose, 2 vCores
+postgresql_storage_mb     = 32768                 # 32 GB
+
+# Key Vault configuration
+key_vault_sku = "standard"
+
+# Storage Account configuration
+storage_account_tier     = "Standard"
+storage_replication_type = "LRS"  # Use GRS for production
+
+# Common tags
+tags = {
+  Environment   = "dev"
+  Project       = "secure-infrastructure"
+  ManagedBy     = "terraform"
+  SecurityLevel = "high"
+  CostCenter    = "engineering"
+  Owner         = "platform-team"
+}
