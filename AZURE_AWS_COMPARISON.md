@@ -215,31 +215,252 @@ resource "aws_sns_topic" "security_alerts" {
 | **Key Rotation** | Manual | Automatic | ✅ AWS enhanced |
 | **Hardware Security** | FIPS 140-2 Level 2 | FIPS 140-2 Level 3 (CloudHSM) | ✅ AWS enhanced |
 
-## Cost Comparison
+## Comprehensive Cost Analysis
 
-### Development Environment Costs (Monthly Estimates)
+### Development Environment Detailed Breakdown
 
-| Service | Azure Cost | AWS Cost | Notes |
-|---------|------------|----------|-------|
-| **Compute/Network** | $50-80 | $60-90 | AWS NAT Gateway costs |
-| **Database** | $25-40 | $20-35 | AWS more cost-effective |
-| **Storage** | $10-20 | $8-15 | AWS S3 cheaper than Blob |
-| **Monitoring** | $15-25 | $20-30 | AWS CloudTrail costs |
-| **Security** | $5-10 | $10-15 | AWS KMS usage costs |
-| **Total** | $105-175 | $118-185 | Comparable |
+#### Azure Development Costs (Monthly)
 
-### Production Environment Considerations
+| Service | Configuration | Unit Cost | Quantity | Monthly Cost | Notes |
+|---------|---------------|-----------|----------|--------------|-------|
+| **Virtual Network** | Standard VNet | $0.00 | 1 | $0.00 | Free tier |
+| **Network Security Groups** | Standard NSG | $0.00 | 3 | $0.00 | Free |
+| **Private DNS Zones** | Standard zone | $0.50 | 3 | $1.50 | DNS queries extra |
+| **Private Endpoints** | Standard endpoints | $7.30 | 3 | $21.90 | Key Vault, Storage, PostgreSQL |
+| **Key Vault** | Standard tier | $0.03/10k ops | ~50k ops | $1.50 | Includes secret storage |
+| **PostgreSQL Flexible Server** | B1ms (1 vCore, 2GB) | $12.41 | 1 | $12.41 | Burstable tier |
+| **PostgreSQL Storage** | General Purpose SSD | $0.115/GB | 32 GB | $3.68 | Includes backup storage |
+| **Storage Account (LRS)** | Standard LRS | $0.018/GB | 100 GB | $1.80 | Hot tier |
+| **Blob Operations** | Standard operations | $0.0004/10k | ~25k ops | $0.10 | API calls |
+| **Log Analytics Workspace** | Pay-as-you-go | $2.30/GB | 5 GB | $11.50 | 30-day retention |
+| **Application Insights** | Basic plan | $2.88/GB | 1 GB | $2.88 | Web tests included |
+| **Action Groups** | Email notifications | $0.00 | 10 | $0.00 | Free tier |
+| **Alerts** | Metric alerts | $0.10 | 10 | $1.00 | Basic alerting |
+| | | | **Total** | **$58.27** | |
 
-**Azure Production Extras:**
-- Premium storage tiers
-- Zone-redundant storage
-- Advanced Threat Protection
+#### AWS Development Costs (Monthly)
 
-**AWS Production Extras:**
-- Multi-AZ deployments
-- Cross-region replication
-- Enhanced monitoring
-- Reserved Instances discounts
+| Service | Configuration | Unit Cost | Quantity | Monthly Cost | Notes |
+|---------|---------------|-----------|----------|--------------|-------|
+| **VPC** | Standard VPC | $0.00 | 1 | $0.00 | Free |
+| **Subnets** | Private/Public subnets | $0.00 | 6 | $0.00 | Free |
+| **NAT Gateways** | Standard NAT | $32.40 + data | 2 | $64.80 | High availability |
+| **Internet Gateway** | Standard IGW | $0.00 | 1 | $0.00 | Free |
+| **Security Groups** | Standard SGs | $0.00 | 3 | $0.00 | Free |
+| **VPC Endpoints** | Interface endpoints | $7.30 | 3 | $21.90 | Secrets Manager, CloudWatch, Logs |
+| **VPC Endpoint (Gateway)** | S3 Gateway endpoint | $0.00 | 1 | $0.00 | Free |
+| **KMS** | Customer managed key | $1.00 + usage | 1 | $2.00 | Includes 20k free requests |
+| **Secrets Manager** | Standard secrets | $0.40 | 2 | $0.80 | PostgreSQL + app config |
+| **Secret Requests** | API requests | $0.05/10k | ~20k | $0.10 | Application usage |
+| **RDS PostgreSQL** | db.t3.micro | $12.41 | 1 | $12.41 | Burstable performance |
+| **RDS Storage** | gp3 storage | $0.115/GB | 20 GB | $2.30 | General Purpose SSD |
+| **RDS Backup Storage** | Backup storage | $0.095/GB | 20 GB | $1.90 | 7-day retention |
+| **S3 Standard** | Standard storage | $0.023/GB | 100 GB | $2.30 | First 50TB pricing |
+| **S3 Requests** | PUT/GET requests | $0.0004/1k | ~50k | $2.00 | API operations |
+| **S3 Access Logs Bucket** | Standard storage | $0.023/GB | 5 GB | $0.12 | Access logging |
+| **CloudWatch Logs** | Log ingestion | $0.50/GB | 5 GB | $2.50 | 30-day retention |
+| **CloudWatch Metrics** | Custom metrics | $0.30 | 20 | $6.00 | Custom application metrics |
+| **CloudWatch Alarms** | Standard alarms | $0.10 | 15 | $1.50 | Monitoring alerts |
+| **CloudTrail** | Data events | $0.10/100k | ~500k | $0.50 | API logging |
+| **CloudTrail Storage** | S3 storage | $0.023/GB | 10 GB | $0.23 | Log storage |
+| **SNS** | Email notifications | $0.50/million | ~1k | $0.01 | Alert notifications |
+| **Config** | Configuration items | $0.003 | 100 | $0.30 | Compliance monitoring |
+| | | | **Total** | **$121.67** | |
+
+### Production Environment Detailed Breakdown
+
+#### Azure Production Costs (Monthly)
+
+| Service | Configuration | Unit Cost | Quantity | Monthly Cost | Annual Savings | Notes |
+|---------|---------------|-----------|----------|--------------|----------------|-------|
+| **Virtual Network** | Premium VNet | $0.00 | 1 | $0.00 | N/A | Free tier |
+| **Private Endpoints** | Standard endpoints | $7.30 | 5 | $36.50 | N/A | Additional services |
+| **Key Vault** | Premium tier + HSM | $1.00 + ops | 1 | $5.00 | N/A | Hardware security |
+| **PostgreSQL Flexible Server** | GP_Standard_D4s_v3 (4 vCore) | $190.00 | 1 | $190.00 | $684 (1yr RI) | Zone redundant |
+| **PostgreSQL Storage** | Premium SSD | $0.17/GB | 1TB | $174.08 | N/A | High IOPS |
+| **Backup Storage** | GRS backup | $0.20/GB | 500GB | $100.00 | N/A | Geo-redundant |
+| **Storage Account (ZRS)** | Premium ZRS | $0.025/GB | 1TB | $25.60 | N/A | Zone redundant |
+| **Advanced Threat Protection** | Defender for Storage | $15.00 | 1 | $15.00 | N/A | Security monitoring |
+| **Log Analytics Workspace** | Premium tier | $2.30/GB | 50 GB | $115.00 | N/A | 90-day retention |
+| **Application Insights** | Enterprise plan | $5.00/GB | 20 GB | $100.00 | N/A | Advanced features |
+| **Sentinel** | Security monitoring | $2.00/GB | 25 GB | $50.00 | N/A | SIEM capabilities |
+| **Private Link** | Data processing | $0.01/GB | 1TB | $10.24 | N/A | Traffic processing |
+| | | | **Total** | **$821.42** | **$684** | **With RI: $754.42** |
+
+#### AWS Production Costs (Monthly)
+
+| Service | Configuration | Unit Cost | Quantity | Monthly Cost | Annual Savings | Notes |
+|---------|---------------|-----------|----------|--------------|----------------|-------|
+| **NAT Gateways** | High availability | $32.40 + data | 2 | $80.00 | N/A | Multi-AZ |
+| **VPC Endpoints** | Interface endpoints | $7.30 | 6 | $43.80 | N/A | Additional services |
+| **KMS** | Customer managed keys | $1.00 + usage | 3 | $6.00 | N/A | Multiple keys |
+| **Secrets Manager** | Production secrets | $0.40 + rotation | 5 | $5.00 | N/A | With Lambda rotation |
+| **RDS PostgreSQL** | db.r6g.2xlarge | $438.72 | 1 | $438.72 | $1,580 (1yr RI) | Multi-AZ |
+| **RDS Storage** | io2 storage | $0.145/GB | 1TB | $148.48 | N/A | High performance |
+| **RDS Backup Storage** | Cross-region backup | $0.095/GB | 2TB | $194.56 | N/A | Disaster recovery |
+| **RDS Enhanced Monitoring** | Detailed monitoring | $1.50 | 1 | $1.50 | N/A | Performance insights |
+| **S3 Standard** | Standard storage | $0.023/GB | 1TB | $23.55 | N/A | Primary storage |
+| **S3 Cross-Region Replication** | Replication storage | $0.023/GB | 1TB | $23.55 | N/A | Disaster recovery |
+| **S3 Intelligent Tiering** | Monitoring/automation | $0.0025/1k objects | 1M objects | $2.50 | N/A | Cost optimization |
+| **S3 Requests** | API operations | $0.0004/1k | 1M | $40.00 | N/A | High transaction volume |
+| **CloudWatch Logs** | Log retention | $0.50/GB | 100 GB | $50.00 | N/A | 90-day retention |
+| **CloudWatch Metrics** | Detailed monitoring | $0.30 | 100 | $30.00 | N/A | Comprehensive metrics |
+| **CloudTrail** | Data events | $0.10/100k | 5M | $5.00 | N/A | Full audit logging |
+| **Config** | Configuration monitoring | $0.003 | 1000 | $3.00 | N/A | Compliance rules |
+| **GuardDuty** | Threat detection | $4.00/GB | 10 GB | $40.00 | N/A | Security monitoring |
+| **Security Hub** | Security findings | $0.0025 | 10k | $0.25 | N/A | Security posture |
+| **Lambda** | Secret rotation | $0.20/1M | 100k | $0.02 | N/A | Automated rotation |
+| | | | **Total** | **$1,131.93** | **$1,580** | **With RI: $928.93** |
+
+### Cost Optimization Strategies
+
+#### Azure Cost Optimization
+
+| Strategy | Potential Savings | Implementation |
+|----------|------------------|----------------|
+| **Reserved Instances** | 36-72% on compute | 1-3 year commitments |
+| **Azure Hybrid Benefit** | Up to 40% | Existing Windows/SQL licenses |
+| **Dev/Test Pricing** | Up to 55% | Development subscriptions |
+| **Spot Instances** | Up to 90% | For fault-tolerant workloads |
+| **Storage Tiering** | 50-75% | Automatic access tier optimization |
+| **Right-sizing** | 10-30% | CPU/memory optimization |
+
+#### AWS Cost Optimization
+
+| Strategy | Potential Savings | Implementation |
+|----------|------------------|----------------|
+| **Reserved Instances** | 30-60% on compute | 1-3 year commitments |
+| **Savings Plans** | 17-72% | Flexible compute savings |
+| **Spot Instances** | Up to 90% | For fault-tolerant workloads |
+| **S3 Intelligent Tiering** | 30-70% | Automatic storage optimization |
+| **Right Sizing** | 15-35% | Instance optimization |
+| **Data Transfer Optimization** | 20-50% | CloudFront and VPC endpoints |
+
+### 5-Year Total Cost of Ownership (TCO)
+
+#### Development Environment (5 Years)
+
+| Platform | Monthly Cost | Annual Cost | 5-Year TCO | Cost per GB Storage | Cost per vCPU |
+|----------|-------------|-------------|-------------|-------------------|---------------|
+| **Azure** | $58.27 | $699.24 | $3,496.20 | $0.018 | $12.41 |
+| **AWS** | $121.67 | $1,460.04 | $7,300.20 | $0.023 | $12.41 |
+| **Difference** | +$63.40 | +$760.80 | +$3,804.00 | +$0.005 | $0.00 |
+
+**Winner: Azure (47% lower cost)**
+
+#### Production Environment (5 Years with Reserved Instances)
+
+| Platform | Monthly Cost | Annual Cost | 5-Year TCO | Reserved Instance Savings |
+|----------|-------------|-------------|-------------|---------------------------|
+| **Azure** | $754.42 | $9,053.04 | $45,265.20 | $3,420/year |
+| **AWS** | $928.93 | $11,147.16 | $55,735.80 | $7,900/year |
+| **Difference** | +$174.51 | +$2,094.12 | +$10,470.60 | +$4,480/year |
+
+**Winner: Azure (19% lower cost)**
+
+### Hidden Costs Analysis
+
+#### Azure Hidden Costs
+
+| Cost Factor | Impact | Mitigation |
+|-------------|--------|------------|
+| **Bandwidth Charges** | $0.05-0.15/GB | Use CDN, optimize transfers |
+| **Premium Storage IOPS** | $0.05 per IOPS | Right-size storage performance |
+| **Key Vault Operations** | $0.03/10k operations | Batch operations, caching |
+| **Log Analytics Queries** | $5/GB over 5GB | Optimize query patterns |
+| **Private Link Data Processing** | $0.01/GB | Minimize cross-region traffic |
+
+#### AWS Hidden Costs
+
+| Cost Factor | Impact | Mitigation |
+|-------------|--------|------------|
+| **Data Transfer** | $0.09/GB out | Use CloudFront, VPC endpoints |
+| **NAT Gateway Data Processing** | $0.045/GB | VPC endpoints for AWS services |
+| **KMS Requests** | $0.03/10k over 20k | Batch operations, data key caching |
+| **CloudTrail Data Events** | $0.10/100k events | Filter events, use CloudWatch Events |
+| **EBS IOPS** | $0.065/provisioned IOPS | Use GP3, right-size performance |
+| **Cross-AZ Data Transfer** | $0.01-0.02/GB | Design for AZ affinity |
+
+### Cost Monitoring and Alerting
+
+#### Azure Cost Management
+
+```hcl
+# Azure Budget Alert
+resource "azurerm_consumption_budget_subscription" "main" {
+  name            = "monthly-budget"
+  subscription_id = data.azurerm_subscription.current.id
+
+  amount     = 1000
+  time_grain = "Monthly"
+
+  time_period {
+    start_date = "2024-01-01T00:00:00Z"
+    end_date   = "2025-01-01T00:00:00Z"
+  }
+
+  notification {
+    enabled        = true
+    threshold      = 80
+    operator       = "GreaterThan"
+    threshold_type = "Actual"
+    contact_emails = ["finance@company.com"]
+  }
+}
+```
+
+#### AWS Cost Management
+
+```hcl
+# AWS Budget Alert
+resource "aws_budgets_budget" "main" {
+  name         = "monthly-budget"
+  budget_type  = "COST"
+  limit_amount = "1000"
+  limit_unit   = "USD"
+  time_unit    = "MONTHLY"
+
+  cost_filters = {
+    Service = ["Amazon Elastic Compute Cloud - Compute"]
+  }
+
+  notification {
+    comparison_operator        = "GREATER_THAN"
+    threshold                 = 80
+    threshold_type            = "PERCENTAGE"
+    notification_type         = "ACTUAL"
+    subscriber_email_addresses = ["finance@company.com"]
+  }
+}
+```
+
+### Financial Recommendations
+
+#### For Development Workloads
+- **Choose Azure**: 47% lower cost, simpler architecture
+- Use Azure Dev/Test subscriptions for additional savings
+- Implement auto-shutdown for development resources
+
+#### For Production Workloads
+- **Choose Azure**: 19% lower cost even with enhanced features
+- Consider AWS if requiring global scale or specific AWS services
+- Implement Reserved Instances/Savings Plans immediately
+
+#### For Hybrid Scenarios
+- Use Azure for Windows/SQL workloads with existing licenses
+- Use AWS for Linux/open-source heavy workloads
+- Consider multi-cloud for disaster recovery scenarios
+
+### Break-even Analysis
+
+| Scenario | Azure Advantage | AWS Advantage | Break-even Point |
+|----------|----------------|---------------|------------------|
+| **Small Scale** (<10 resources) | 40-50% cost advantage | Better automation | Never |
+| **Medium Scale** (10-100 resources) | 20-30% cost advantage | Better performance monitoring | >$2000/month spend |
+| **Large Scale** (100+ resources) | 15-25% cost advantage | Superior scalability | >$10000/month spend |
+| **Global Scale** (Multi-region) | Varies by region | Better global infrastructure | Depends on regions |
+
+**Conclusion**: Azure provides better cost efficiency for most workload sizes, while AWS offers superior value for large-scale, globally distributed applications requiring advanced automation and monitoring capabilities.
 
 ## Operational Comparison
 
