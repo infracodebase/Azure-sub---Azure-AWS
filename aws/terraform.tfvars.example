@@ -1,0 +1,40 @@
+# Example Terraform variables file for AWS
+# Copy this to terraform.tfvars and customize values
+
+# Environment configuration
+environment  = "dev"
+region       = "us-east-2"
+project_name = "secure-infra"
+
+# Network security - Add your public IP addresses for emergency access (CIDR format)
+allowed_ip_addresses = [
+  # "203.0.113.1/32",  # Your office IP
+  # "198.51.100.1/32", # Your home IP
+]
+
+# VPC configuration
+vpc_cidr           = "10.0.0.0/16"
+availability_zones = 2
+
+# PostgreSQL configuration
+postgresql_admin_username       = "postgres"
+postgresql_instance_class       = "db.t3.micro"    # Use db.r6g.large or higher for production
+postgresql_allocated_storage    = 20               # GB
+postgresql_max_allocated_storage = 100              # GB
+
+# S3 configuration
+s3_versioning         = true
+s3_lifecycle_enabled  = true
+
+# KMS configuration
+kms_deletion_window = 7  # Use 30 for production
+
+# Common tags
+tags = {
+  Environment   = "dev"
+  Project       = "secure-infrastructure"
+  ManagedBy     = "terraform"
+  SecurityLevel = "high"
+  CostCenter    = "engineering"
+  Owner         = "platform-team"
+}
